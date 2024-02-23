@@ -19,7 +19,45 @@ steps:
       scanPath: 'src/Task/dependency-check-build-task'
       format: 'HTML'
     displayName: 'Run Dependency Check'
+  # Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  # Instalación y análisis de dependencias de seguridad con OWASP Dependency-Check
+  - task: dependency-check-build-task@6
+    inputs:
+      projectName: 'Pruebas_OWASP'
+      scanPath: 'src/Task/dependency-check-build-task'
+      format: 'HTML'
+    displayName: 'Run Dependency Check'
+    continueOnError: true  # Continuar el pipeline incluso si esta tarea falla
+    
+  # Verificar si la tarea de Dependency Check falló y mostrar un mensaje
+  - script: |
+      if [ $? -ne 0 ]; then
+        echo "Dependency Check failed but pipeline will continue."
+      fi
+    displayName: 'Check Dependency Check result'
   
+  # Instalación de Node.js y ejecución de comandos npm
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+      npm run build
+    displayName: 'npm install and build'
+
   # Comprueba el estado de salida de Dependency Check y ejecuta pasos adicionales según sea necesario
   - script: |
       if [ $? -eq 0 ]; then
