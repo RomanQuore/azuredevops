@@ -4,18 +4,28 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  - main
+
+  # Puedes agregar otros eventos de activación aquí si es necesario
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  # Instalación y análisis de dependencias de seguridad con OWASP Dependency-Check
+  - task: dependency-check-build-task@6
+    inputs:
+      projectName: 'Pruebas_OWASP'
+      scanPath: 'src/Task/dependency-check-build-task'
+      format: 'HTML'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+  # Instalación de Node.js y ejecución de comandos npm
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+      npm run build
+    displayName: 'npm install and build'
