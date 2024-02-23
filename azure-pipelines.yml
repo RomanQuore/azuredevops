@@ -6,6 +6,8 @@
 trigger:
   - main
 
+  # Puedes agregar otros eventos de activación aquí si es necesario
+
 pool:
   vmImage: ubuntu-latest
 
@@ -16,16 +18,7 @@ steps:
       projectName: 'Pruebas_OWASP'
       scanPath: 'src/Task/dependency-check-build-task'
       format: 'HTML'
-    displayName: 'Run Dependency Check'
-    continueOnError: true  # Continuar el pipeline incluso si esta tarea falla
-    
-  # Verificar si la tarea de Dependency Check falló y mostrar un mensaje
-  - script: |
-      if [ $? -ne 0 ]; then
-        echo "Dependency Check failed but pipeline will continue."
-      fi
-    displayName: 'Check Dependency Check result'
-  
+
   # Instalación de Node.js y ejecución de comandos npm
   - task: NodeTool@0
     inputs:
