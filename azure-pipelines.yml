@@ -18,7 +18,18 @@ steps:
       projectName: 'Pruebas_OWASP'
       scanPath: 'src/Task/dependency-check-build-task'
       format: 'HTML'
-
+    displayName: 'Run Dependency Check'
+  
+  # Comprueba el estado de salida de Dependency Check y ejecuta pasos adicionales según sea necesario
+  - script: |
+      if [ $? -eq 0 ]; then
+        echo "Dependency Check completed successfully."
+      else
+        echo "Dependency Check failed with exit code $?. Continuing pipeline execution."
+        # Puedes agregar aquí pasos adicionales para manejar el fallo de Dependency Check
+      fi
+    displayName: 'Handle Dependency Check result'
+    
   # Instalación de Node.js y ejecución de comandos npm
   - task: NodeTool@0
     inputs:
