@@ -16,7 +16,7 @@ steps:
   - task: dependency-check-build-task@6
     inputs:
       projectName: 'Pruebas_OWASP'
-      scanPath: 'src/Task/dependency-check-build-task'
+      scanPath: 'src/main/resources/dependency-check.xml'
       format: 'HTML'
 
   # Instalación de Node.js y ejecución de comandos npm
